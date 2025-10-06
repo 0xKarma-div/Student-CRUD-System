@@ -1,16 +1,34 @@
 <?php
+session_start();
+
+// Check if user is logged in
+if(strlen($_SESSION['uid']) == "") {
+    header('location:signin.php');
+} else {
+
 require_once ("class/DBController.php");
 require_once ("class/Student.php");
 require_once ("class/Attendance.php");
 
 $db_handle = new DBController();
 
+// Get current user role
+$userRole = $_SESSION['role'];
+$isAdmin = ($userRole == 'admin');
+
 $action = "";
 if (! empty($_GET["action"])) {
     $action = $_GET["action"];
 }
+
 switch ($action) {
     case "attendance-add":
+        // Only admin can add attendance
+        if(!$isAdmin) {
+            header("Location: index.php?action=attendance");
+            exit();
+        }
+        
         if (isset($_POST['add'])) {
             $attendance = new Attendance();
             
@@ -41,6 +59,12 @@ switch ($action) {
         break;
     
     case "attendance-edit":
+        // Only admin can edit attendance
+        if(!$isAdmin) {
+            header("Location: index.php?action=attendance");
+            exit();
+        }
+        
         $attendance_date = $_GET["date"];
         $attendance = new Attendance();
         if (isset($_POST['add'])) {
@@ -71,6 +95,12 @@ switch ($action) {
         break;
     
     case "attendance-delete":
+        // Only admin can delete attendance
+        if(!$isAdmin) {
+            header("Location: index.php?action=attendance");
+            exit();
+        }
+        
         $attendance_date = $_GET["date"];
         $attendance = new Attendance();
         $attendance->deleteAttendanceByDate($attendance_date);
@@ -80,12 +110,19 @@ switch ($action) {
         break;
     
     case "attendance":
+        // Everyone can view attendance
         $attendance = new Attendance();
         $result = $attendance->getAttendance();
         require_once "web/attendance.php";
         break;
     
     case "student-add":
+        // Only admin can add students
+        if(!$isAdmin) {
+            header("Location: index.php");
+            exit();
+        }
+        
         if (isset($_POST['add'])) {
             $name = $_POST['name'];
             $roll_number = $_POST['roll_number'];
@@ -111,6 +148,12 @@ switch ($action) {
         break;
     
     case "student-edit":
+        // Only admin can edit students
+        if(!$isAdmin) {
+            header("Location: index.php");
+            exit();
+        }
+        
         $student_id = $_GET["id"];
         $student = new Student();
         
@@ -134,6 +177,12 @@ switch ($action) {
         break;
     
     case "student-delete":
+        // Only admin can delete students
+        if(!$isAdmin) {
+            header("Location: index.php");
+            exit();
+        }
+        
         $student_id = $_GET["id"];
         $student = new Student();
         
@@ -148,5 +197,7 @@ switch ($action) {
         $result = $student->getAllStudent();
         require_once "web/student.php";
         break;
+}
+
 }
 ?>

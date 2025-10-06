@@ -1,49 +1,85 @@
-<?php require_once "web/header.php"; ?>
-    <div style="text-align: right; margin: 20px 0px 10px;">
-        <a id="btnAddAction" href="index.php?action=student-add"><img src="web/image/icon-add.png" />Add Student</a>
+<HTML>
+<HEAD>
+<TITLE>Student Management</TITLE>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<style>
+.logout-btn {
+    float: left;
+    background: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.logout-btn:hover {
+    background: #c82333;
+}
+.user-info {
+    float: right;
+    margin-right: 15px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+</style>
+</HEAD>
+<BODY>
+<div class="phppot-container">
+    <div style="margin-bottom: 15px; overflow: hidden;">
+        <div class="user-info">
+            Welcome, <strong><?php echo $_SESSION['fname']; ?></strong> 
+            (<?php echo ($_SESSION['role'] == 'admin') ? 'Admin' : 'Viewer'; ?>)
+        </div>
+        <a href="logout.php" class="logout-btn">Logout</a>
     </div>
-    <div id="toys-grid">
-        <table cellpadding="10" cellspacing="1">
+    
+    <h1>Student Management</h1>
+    <a href="index.php?action=attendance" id="btn-add">View Attendance</a>
+    
+    <?php if($_SESSION['role'] == 'admin'): ?>
+    <a href="index.php?action=student-add" id="btn-add">Add Student</a>
+    <?php endif; ?>
+    
+    <div class="page-content">
+        <table class="tutorial-table">
             <thead>
                 <tr>
-                    <th><strong>Student Name</strong></th>
-                    <th><strong>Roll Number</strong></th>
-                    <th><strong>Date of Birth</strong></th>
-                    <th><strong>Class</strong></th>
-                    <th><strong>Action</strong></th>
-
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Date of Birth</th>
+                    <th>Class</th>
+                    <?php if($_SESSION['role'] == 'admin'): ?>
+                    <th>Action</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
-            <tbody>
-                    <?php
-                    if (! empty($result)) {
-                        foreach ($result as $k => $v) {
-                            ?>
-          <tr>
-                    <td><?php echo $result[$k]["name"]; ?></td>
-                    <td><?php echo $result[$k]["roll_number"]; ?></td>
-                    <td><?php echo $result[$k]["dob"]; ?></td>
-                    <td><?php echo $result[$k]["class"]; ?></td>
-                    <td><a class="btnEditAction"
-                        href="index.php?action=student-edit&id=<?php echo $result[$k]["id"]; ?>">
-                        <img src="web/image/icon-edit.png" />
-                        </a>
-                        <a class="btnDeleteAction" 
-                        href="index.php?action=student-delete&id=<?php echo $result[$k]["id"]; ?>">
-                        <img src="web/image/icon-delete.png" />
-                        </a>
+            <tbody id="table-body">
+                <?php
+                if (! empty($result)) {
+                    foreach ($result as $row) {
+                        ?>
+                <tr class="table-row" id="table-row-<?php echo $row["id"]; ?>">
+                    <td><?php echo $row["name"]; ?></td>
+                    <td><?php echo $row["roll_number"]; ?></td>
+                    <td><?php echo $row["dob"]; ?></td>
+                    <td><?php echo $row["class"]; ?></td>
+                    <?php if($_SESSION['role'] == 'admin'): ?>
+                    <td><a class="ajax-action-links"
+                        href="index.php?action=student-edit&id=<?php echo $row["id"]; ?>">Edit</a>
+                        | 
+                        <a class="ajax-action-links"
+                        href="index.php?action=student-delete&id=<?php echo $row["id"]; ?>">Delete</a>
                     </td>
+                    <?php endif; ?>
                 </tr>
-                    <?php
-                        }
+                <?php
                     }
-                    ?>
-                
-            
-            
-            <tbody>
-        
+                }
+                ?>
+            </tbody>
         </table>
     </div>
-</body>
-</html>
+</div>
+</BODY>
+</HTML>
