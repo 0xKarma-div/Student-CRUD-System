@@ -50,6 +50,31 @@ CREATE TABLE `tbl_student` (
   `class` varchar(55) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblusers` (الجدول الجديد)
+--
+
+CREATE TABLE `tblusers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `FullName` varchar(120) DEFAULT NULL,
+  `Username` varchar(120) DEFAULT NULL,
+  `UserEmail` varchar(200) DEFAULT NULL,
+  `Password` varchar(250) DEFAULT NULL,
+  `UserRole` varchar(20) DEFAULT 'viewer',
+  `RegDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblusers`
+--
+
+INSERT INTO `tblusers` (`id`, `FullName`, `Username`, `UserEmail`, `Password`, `UserRole`, `RegDate`) VALUES
+(1, 'Admin User', 'admin', 'admin@example.com', '0192023a7bbd73250516f069df18b500', 'admin', CURRENT_TIMESTAMP),
+(2, 'Viewer User', 'viewer', 'viewer@example.com', '670b14728ad9902aecba32e22fa4f6bd', 'viewer', CURRENT_TIMESTAMP);
+
 --
 -- Indexes for dumped tables
 --
@@ -84,6 +109,12 @@ ALTER TABLE `tbl_student`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `tblusers`
+--
+ALTER TABLE `tblusers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -92,6 +123,7 @@ ALTER TABLE `tbl_student`
 --
 ALTER TABLE `tbl_attendance`
   ADD CONSTRAINT `tbl_attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `tbl_student` (`id`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
